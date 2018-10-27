@@ -15,16 +15,26 @@ namespace MediaShare.Media.Manager
         private IRepository<Video> _videoRepo;
         private IAbpSession _abpSession;
         IRepository<User, long> _userRepo;
+        private IRepository<Image> _imageRepo;
+        private IRepository<VideoFavRelation> _videoFavRelationRepo;
+        private IRepository<ViewRecord> _viewRecordRepo;
 
         public VideoService(
             IRepository<Video> videoRepo,
             IAbpSession abpSession,
-            IRepository<User, long> userRepo
+            IRepository<User, long> userRepo,
+            IRepository<Image> imageRepo,
+            IRepository<VideoFavRelation> videoFavRelationRepo,
+            IRepository<ViewRecord> viewRecordRepo
             )
         {
             this._videoRepo = videoRepo;
             this._abpSession = abpSession;
             this._userRepo = userRepo;
+
+            this._imageRepo = imageRepo;
+            this._videoFavRelationRepo = videoFavRelationRepo;
+            this._viewRecordRepo = viewRecordRepo;
         }
 
         protected Video GetRandomVideo(int[] videoIds)
@@ -75,6 +85,10 @@ namespace MediaShare.Media.Manager
             var video = this._videoRepo.Get(videoId);
             if (File.Exists(video.PhysicalPath))
                 File.Delete(video.PhysicalPath);
+
+            this._viewRecordRepo.Delete(x => x.Video.Id == videoId);
+            this._videoFavRelationRepo.Delete(x => x.Video.Id == videoId);
+            this._imageRepo.Delete(x => x.Video.Id == videoId);
             this._videoRepo.Delete(videoId);
         }
 

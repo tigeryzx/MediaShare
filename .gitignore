@@ -7,3 +7,4 @@ bin/
 aspnet-core/src/MediaShare.Web.Host/App_Data/Logs/
 aspnet-core/src/MediaShare.Web.Mvc/App_Data/Logs/
 aspnet-core/src/MediaShare.Migrator/Logs/Logs.txt
+/MediaShareIOS
